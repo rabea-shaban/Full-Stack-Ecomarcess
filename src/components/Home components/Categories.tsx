@@ -55,9 +55,10 @@ const Categories = () => {
         <span className="border-s-[3rem] rounded-md  border-[#DB4444] "></span>
         <h5 className="ps-3 text-2xl font-bold text-[#DB4444] ">Categories</h5>
       </div>
-      <div className="flex items-center justify-between mb-6">
+
+      <div className="flex my-5 items-center justify-between mb-6">
         <div>
-          <h3 className="text-[30px] font-bold mr-25 ">Browse By Category</h3>
+          <h3 className="text-2xl font-bold mr-25 ">Browse By Category</h3>
         </div>
 
         <div className="flex items-center gap-3">
@@ -80,6 +81,9 @@ const Categories = () => {
             slidesPerView: 2,
           },
           1024: {
+            slidesPerView: 3,
+          },
+          1280: {
             slidesPerView: 4,
           },
         }}

@@ -1,6 +1,10 @@
 import BestSelling from "../../components/Home components/BestSelling";
 import Categories from "../../components/Home components/Categories";
+import CategoriesBaner from "../../components/Home components/CategoriesBaner";
+import Featured from "../../components/Home components/Featured";
 import HeroSlider from "../../components/Home components/HeroSlider";
+import OurProducts from "../../components/Home components/OurProducts";
+import Services from "../../components/Home components/Services";
 import Side from "../../components/Home components/Side";
 import Todays from "../../components/Home components/Todays";
 import Container from "../../components/ui/Container";
@@ -14,7 +18,11 @@ const Home = () => {
       </div>
       <Todays />
       <Categories />
-      <BestSelling />
+      <BestSelling title="Best Selling" />
+      <CategoriesBaner />
+      <OurProducts />
+      <Featured />
+      <Services />
     </Container>
   );
 };

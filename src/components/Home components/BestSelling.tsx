@@ -12,8 +12,11 @@ import type { IProduct } from "../../interface";
 import axiosInstance from "../../utils/axios";
 import OneCardProd from "../product/OneCardProd";
 import Container from "../ui/Container";
-
-const BestSelling = () => {
+// const title = "Best Selling Products";
+type Props = {
+  title: string;
+};
+const BestSelling = ({ title }: Props) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,8 +42,8 @@ const BestSelling = () => {
         <span className="border-s-[3rem]  rounded-md  border-[#DB4444] "></span>
         <h5 className="ps-3 text-2xl font-bold text-[#DB4444] ">This Month</h5>
       </div>
-      <div className="flex items-center justify-between mb-6">
-        <h5 className="text-3xl font-bold">Best Selling Products</h5>
+      <div className="flex my-5 items-center justify-between mb-6">
+        <h5 className="text-2xl  font-bold">{title}</h5>
         <Link
           className="block w-fit px-8 py-3 bg-[#DB4444] text-white rounded-md"
           to="">
@@ -78,12 +81,6 @@ const BestSelling = () => {
           ))
         )}
       </Swiper>
-
-      <Link
-        className="block w-fit m-auto text-center mt-10 px-8 py-3 bg-[#DB4444] text-white rounded-md"
-        to="">
-        View All Products
-      </Link>
     </Container>
   );
 };

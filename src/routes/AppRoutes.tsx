@@ -1,8 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import About from "../Pages/About/About";
+import Login from "../Pages/Auth/Login";
+import SignUp from "../Pages/Auth/SignUp";
 import Contact from "../Pages/Contact/Contact";
 import Home from "../Pages/Home/Home";
-import AuthLayout from "../components/layout/AuthLayout";
+import Account from "../Pages/Users/Account";
+import Wishlist from "../Pages/wishlist/Wishlist";
 import Root from "../components/layout/Root";
 
 const router = createBrowserRouter([
@@ -18,10 +21,23 @@ const router = createBrowserRouter([
 
   {
     path: "auth",
-    Component: AuthLayout,
+    Component: Root,
     children: [
-      { path: "login", Component: () => <h1>Login</h1> },
-      { path: "register", Component: () => <h1>Register</h1> },
+      { path: "login", Component: Login },
+      { path: "register", Component: SignUp },
+    ],
+  },
+
+  // User Pages
+  {
+    path: "account",
+    Component: Root,
+    children: [
+      { index: true, Component: Account },
+      { path: "orders", Component: () => <div>Orders</div> },
+      { path: "cancellations", Component: () => <div>Cancellations</div> },
+      { path: "reviews", Component: () => <div>Reviews</div> },
+      { path: "Wishlist", Component: Wishlist },
     ],
   },
 ]);
