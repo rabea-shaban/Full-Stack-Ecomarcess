@@ -1,6 +1,8 @@
 import axios from "axios";
 import { getToken } from "./auth";
 
+export const IMG_URL="http://localhost:5000/uploads/";
+
 const axiosInstance = axios.create({
   baseURL: "http://localhost:5000",
 });

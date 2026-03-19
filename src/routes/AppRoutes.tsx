@@ -7,6 +7,8 @@ import Home from "../Pages/Home/Home";
 import Account from "../Pages/Users/Account";
 import Wishlist from "../Pages/wishlist/Wishlist";
 import Root from "../components/layout/Root";
+import Products from "../Pages/Products";
+import ProductDetail from "../Pages/Products/ProductDetail";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,8 @@ const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "about", Component: About },
       { path: "contact", Component: Contact },
+      { path: "products", Component: Products },
+      { path: "products/:id", Component: ProductDetail },
     ],
   },
 

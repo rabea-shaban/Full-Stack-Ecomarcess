@@ -46,7 +46,8 @@ const BestSelling = ({ title }: Props) => {
         <h5 className="text-2xl  font-bold">{title}</h5>
         <Link
           className="block w-fit px-8 py-3 bg-[#DB4444] text-white rounded-md"
-          to="">
+          to="/products"
+        >
           View All
         </Link>
       </div>
@@ -64,7 +65,8 @@ const BestSelling = ({ title }: Props) => {
           },
         }}
         spaceBetween={30}
-        freeMode={true}>
+        freeMode={true}
+      >
         {loading ? (
           <div className="flex justify-center items-center h-40">
             <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>

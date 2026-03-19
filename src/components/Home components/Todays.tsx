@@ -104,7 +104,8 @@ const Todays = () => {
           nextEl: ".next",
           prevEl: ".prev",
         }}
-        modules={[FreeMode, Navigation]}>
+        modules={[FreeMode, Navigation]}
+      >
         {loading ? (
           <div className="flex justify-center items-center h-40">
             <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
@@ -124,7 +125,8 @@ const Todays = () => {
 
       <Link
         className="block w-fit m-auto text-center mt-10 px-8 py-3 bg-[#DB4444] text-white rounded-md"
-        to="">
+        to="/products"
+      >
         View All Products
       </Link>
     </Container>

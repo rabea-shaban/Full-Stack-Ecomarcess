@@ -43,7 +43,8 @@ const OneCardProd = ({ product }: Props) => {
 
         <button
           onClick={() => console.log(product)}
-          className="absolute cursor-pointer bottom-0 btn-card bg-black w-full text-white py-3 rounded-md">
+          className="absolute cursor-pointer bottom-0 btn-card bg-black w-full text-white py-3 rounded-md"
+        >
           Add To Cart
         </button>
       </div>
@@ -52,7 +53,7 @@ const OneCardProd = ({ product }: Props) => {
       <div className="my-5">
         <h5 className="text-[16px] font-bold">{product.name}</h5>
 
-        <p>{product.categoryId.name}</p>
+        <p>{product.category.name}</p>
 
         <span className="text-[#DB4444] text-[16px]">{product.price}$</span>
 
@@ -61,8 +62,9 @@ const OneCardProd = ({ product }: Props) => {
         </span>
 
         <div className="rating">
-          ⭐⭐⭐⭐⭐
-          <span className="text-gray-300">(55)</span>
+          {"⭐".repeat(Math.round(product.rating || 0))}
+
+          <span className="text-gray-300">( {product.rating})</span>
         </div>
       </div>
 
@@ -71,14 +73,16 @@ const OneCardProd = ({ product }: Props) => {
         {/* Wishlist */}
         <div
           onClick={handleWishlist}
-          className="bg-white p-2 rounded-full flex justify-center items-center cursor-pointer">
+          className="bg-white p-2 rounded-full flex justify-center items-center cursor-pointer"
+        >
           <FaRegHeart className={liked ? "text-red-500" : ""} />
         </div>
 
         {/* View */}
         <div
           onClick={() => open(product)}
-          className="cursor-pointer bg-white p-2 rounded-full flex justify-center items-center">
+          className="cursor-pointer bg-white p-2 rounded-full flex justify-center items-center"
+        >
           <GrView />
         </div>
       </div>
@@ -109,7 +113,7 @@ const OneCardProd = ({ product }: Props) => {
                   </DialogTitle>
 
                   <p className="text-gray-500">
-                    Category: {view.categoryId.name}
+                    Category: {view.category.name}
                   </p>
 
                   <p className="text-2xl text-red-500 font-bold">
