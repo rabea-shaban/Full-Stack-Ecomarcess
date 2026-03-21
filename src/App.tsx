@@ -4,6 +4,7 @@ import router from "./routes/AppRoutes";
 function App() {
   return (
     <>
+      {/* <ScrollToTop /> */}
       <RouterProvider router={router} />
     </>
   );

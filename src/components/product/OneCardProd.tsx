@@ -4,18 +4,22 @@ import { FaRegHeart } from "react-icons/fa";
 import { GrView } from "react-icons/gr";
 import type { IProduct } from "../../interface";
 import { isInWishlist, toggleWishlist } from "../../utils/wishlist";
-
+import { useNavigate } from "react-router-dom";
+import { IMG_URL } from "../../utils/axios";
 type Props = {
   product: IProduct;
 };
 
-const urelImg = "http://localhost:5000/uploads/";
+// const urelImg = "http://localhost:5000/uploads/";
 
 const OneCardProd = ({ product }: Props) => {
   const [view, setView] = useState<IProduct | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const [liked, setLiked] = useState(isInWishlist(product._id));
+  const navigate = useNavigate();
+
+  const isLoggedIn = () => !!localStorage.getItem("token");
 
   function open(product: IProduct) {
     setView(product);
@@ -27,8 +31,22 @@ const OneCardProd = ({ product }: Props) => {
   }
 
   const handleWishlist = () => {
+    if (!isLoggedIn()) {
+      navigate("/auth/login");
+      return;
+    }
+
     toggleWishlist(product);
     setLiked(!liked);
+  };
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn()) {
+      navigate("/auth/login");
+      return;
+    }
+
+    console.log("Added to cart", product);
   };
 
   return (
@@ -37,12 +55,12 @@ const OneCardProd = ({ product }: Props) => {
       <div className="relative cart-slider-tocart overflow-hidden img bg-gray-200 rounded-2xl mb-10 flex items-center justify-center">
         <img
           className="w-full h-[400px] object-cover"
-          src={`${urelImg}${product.image}`}
+          src={`${IMG_URL}${product.image}`}
           alt=""
         />
 
         <button
-          onClick={() => console.log(product)}
+          onClick={handleAddToCart}
           className="absolute cursor-pointer bottom-0 btn-card bg-black w-full text-white py-3 rounded-md"
         >
           Add To Cart
@@ -102,7 +120,7 @@ const OneCardProd = ({ product }: Props) => {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Image */}
                 <img
-                  src={`${urelImg}${view.image}`}
+                  src={`${IMG_URL}${view.image}`}
                   className="w-full h-[400px] object-cover rounded-xl"
                 />
 
@@ -124,7 +142,10 @@ const OneCardProd = ({ product }: Props) => {
                     {view.description || "No description available"}
                   </p>
 
-                  <button className="bg-black text-white px-6 py-3 rounded-lg">
+                  <button
+                    onClick={handleAddToCart}
+                    className="bg-black text-white px-6 py-3 rounded-lg"
+                  >
                     Add To Cart
                   </button>
                 </div>

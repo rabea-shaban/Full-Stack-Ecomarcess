@@ -9,6 +9,10 @@ import Wishlist from "../Pages/wishlist/Wishlist";
 import Root from "../components/layout/Root";
 import Products from "../Pages/Products";
 import ProductDetail from "../Pages/Products/ProductDetail";
+import NotFound from "../Pages/Error/NotFound";
+import Cart from "../Pages/Cart/Cart";
+import Checkout from "../Pages/Checkout/Checkout";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -37,12 +41,23 @@ const router = createBrowserRouter([
     path: "account",
     Component: Root,
     children: [
-      { index: true, Component: Account },
-      { path: "orders", Component: () => <div>Orders</div> },
-      { path: "cancellations", Component: () => <div>Cancellations</div> },
-      { path: "reviews", Component: () => <div>Reviews</div> },
-      { path: "Wishlist", Component: Wishlist },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { index: true, Component: Account },
+          { path: "orders", Component: () => <div>Orders</div> },
+          { path: "cancellations", Component: () => <div>Cancellations</div> },
+          { path: "reviews", Component: () => <div>Reviews</div> },
+          { path: "Wishlist", Component: Wishlist },
+          { path: "cart", Component: Cart },
+          { path: "checkout", Component: Checkout },
+        ],
+      },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ]);
 

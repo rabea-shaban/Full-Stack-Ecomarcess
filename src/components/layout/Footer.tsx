@@ -1,12 +1,16 @@
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn,
+} from "react-icons/fa";
 import { IoSendOutline } from "react-icons/io5";
+import Container from "../ui/Container";
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white pt-16 pb-8">
-
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-
+    <footer className="bg-black text-white pt-16 pb-8 mt-10">
+      <Container className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
         {/* Exclusive */}
         <div>
           <h3 className="text-xl font-bold mb-5">Exclusive</h3>
@@ -34,17 +38,14 @@ const Footer = () => {
           <h3 className="text-xl font-bold mb-5">Support</h3>
 
           <p className="text-gray-400 text-sm mb-2">
-            111 Bijoy sarani, Dhaka,<br />
+            111 Bijoy sarani, Dhaka,
+            <br />
             DH 1515, Bangladesh.
           </p>
 
-          <p className="text-gray-400 text-sm mb-2">
-            exclusive@gmail.com
-          </p>
+          <p className="text-gray-400 text-sm mb-2">exclusive@gmail.com</p>
 
-          <p className="text-gray-400 text-sm">
-            +88015-88888-9999
-          </p>
+          <p className="text-gray-400 text-sm">+88015-88888-9999</p>
         </div>
 
         {/* Account */}
@@ -81,10 +82,7 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-3 mb-4">
-            <img
-              src="/Qr Code.png"
-              className="w-20 h-20"
-            />
+            <img src="/Qr Code.png" className="w-20 h-20" />
 
             <div className="flex flex-col gap-2">
               <img src="/google-play.png" className="h-8" />
@@ -99,14 +97,12 @@ const Footer = () => {
             <FaLinkedinIn />
           </div>
         </div>
-
-      </div>
+      </Container>
 
       {/* Bottom */}
       <div className="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
         © Copyright Rimel 2022. All right reserved
       </div>
-
     </footer>
   );
 };
