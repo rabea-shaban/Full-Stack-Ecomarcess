@@ -6,11 +6,11 @@ import type { IProduct } from "../../interface";
 import { isInWishlist, toggleWishlist } from "../../utils/wishlist";
 import { useNavigate } from "react-router-dom";
 import { IMG_URL } from "../../utils/axios";
+import { useDispatch } from "react-redux";
+import { addItem } from "../../App/slices/cartSlice";
 type Props = {
   product: IProduct;
 };
-
-// const urelImg = "http://localhost:5000/uploads/";
 
 const OneCardProd = ({ product }: Props) => {
   const [view, setView] = useState<IProduct | null>(null);
@@ -18,7 +18,7 @@ const OneCardProd = ({ product }: Props) => {
 
   const [liked, setLiked] = useState(isInWishlist(product._id));
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const isLoggedIn = () => !!localStorage.getItem("token");
 
   function open(product: IProduct) {
@@ -44,9 +44,10 @@ const OneCardProd = ({ product }: Props) => {
     if (!isLoggedIn()) {
       navigate("/auth/login");
       return;
+    } else {
+      console.log("Added to cart", product);
+      dispatch(addItem(product));
     }
-
-    console.log("Added to cart", product);
   };
 
   return (
@@ -60,7 +61,7 @@ const OneCardProd = ({ product }: Props) => {
         />
 
         <button
-          onClick={handleAddToCart}
+          onClick={() => handleAddToCart()}
           className="absolute cursor-pointer bottom-0 btn-card bg-black w-full text-white py-3 rounded-md"
         >
           Add To Cart

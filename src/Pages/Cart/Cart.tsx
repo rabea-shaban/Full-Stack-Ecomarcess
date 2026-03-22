@@ -1,8 +1,35 @@
 import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import Container from "../../components/ui/Container";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../App/store";
+import { IMG_URL } from "../../utils/axios";
+import {
+  decreaswQty,
+  increaswQty,
+  removeFromCart,
+} from "../../App/slices/cartSlice";
+import type { IProduct } from "../../interface";
 
 const Cart = () => {
+  const cart = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
+  const total = cart.reduce(
+    (acc, item) => acc + item.price * (item.quantity || 1),
+    0,
+  );
+
+  const handleIncreaswQty = (prod: IProduct) => {
+    dispatch(increaswQty(prod._id));
+  };
+
+  const handleDecreaswQty = (prod: IProduct) => {
+    dispatch(decreaswQty(prod._id));
+  };
+  const handelRemoveFromCart = (prod: IProduct) => {
+    dispatch(removeFromCart(prod._id));
+  };
+
   return (
     <Container>
       {/* Breadcrumb */}
@@ -17,64 +44,46 @@ const Cart = () => {
       </div>
 
       {/* Item */}
-      <div className="grid grid-cols-4 items-center bg-white shadow-sm border rounded-md px-8 py-6 mt-6">
-        {/* Product */}
-        <div className="flex items-center gap-4">
-          <button className="text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs">
-            <FaTimes />
-          </button>
+      {cart.map((item) => (
+        <div
+          key={item._id}
+          className="grid grid-cols-4 bg-white shadow-sm border rounded-md px-8 py-5 text-sm font-medium text-gray-600"
+        >
+          <div className="flex items-center gap-4">
+            <FaTimes
+              onClick={() => handelRemoveFromCart(item)}
+              className="cursor-pointer text-gray-400 hover:text-black"
+            />
+            <img
+              src={`${IMG_URL}${item.image}`}
+              className="w-16 h-16 object-cover"
+              alt=""
+            />
+            <p>{item.name}</p>
+          </div>
 
-          <img
-            src="/images/products/monitor.png"
-            className="w-14 h-14 object-contain"
-          />
+          <p>${item.price}</p>
 
-          <p className="text-sm">LCD Monitor</p>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => handleDecreaswQty(item)}
+              className="border w-8 h-8 flex items-center justify-center rounded-md"
+            >
+              -
+            </button>
+            <span>{item.quantity}</span>
+            <button
+              onClick={() => handleIncreaswQty(item)}
+              className="border w-8 h-8 flex items-center justify-center rounded-md"
+            >
+              +
+            </button>
+          </div>
+          <p className="text-right">
+            ${(item.price * (item.quantity || 1)).toFixed(2)}
+          </p>
         </div>
-
-        {/* Price */}
-        <p className="text-sm">$650</p>
-
-        {/* Quantity */}
-        <div className="flex justify-center">
-          <input
-            type="number"
-            defaultValue={1}
-            className="w-16 h-10 border rounded-md text-center outline-none"
-          />
-        </div>
-
-        {/* Subtotal */}
-        <p className="text-sm text-right">$650</p>
-      </div>
-
-      {/* Item */}
-      <div className="grid grid-cols-4 items-center bg-white shadow-sm border rounded-md px-8 py-6 mt-4">
-        <div className="flex items-center gap-4">
-          <button className="text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs">
-            <FaTimes />
-          </button>
-
-          <img
-            src="/images/products/gamepad.png"
-            className="w-14 h-14 object-contain"
-          />
-
-          <p className="text-sm">HI Gamepad</p>
-        </div>
-
-        <p className="text-sm">$550</p>
-
-        <div className="flex justify-center">
-          <input
-            type="number"
-            defaultValue={2}
-            className="w-16 h-10 border rounded-md text-center outline-none"
-          />
-        </div>
-
-        <p className="text-sm text-right">$1100</p>
-      </div>
+      ))}
 
       {/* Buttons */}
       <div className="flex justify-between mt-8">
@@ -108,7 +117,7 @@ const Cart = () => {
 
           <div className="flex justify-between text-sm mb-3">
             <span>Subtotal:</span>
-            <span>$1750</span>
+            <span>${total.toFixed(2)}</span>
           </div>
 
           <div className="flex justify-between text-sm mb-3 border-b pb-3">
@@ -118,12 +127,15 @@ const Cart = () => {
 
           <div className="flex justify-between text-sm font-medium mt-3 mb-6">
             <span>Total:</span>
-            <span>$1750</span>
+            <span>${total.toFixed(2)}</span>
           </div>
 
-          <button className="w-full bg-red-500 text-white py-3 rounded-md text-sm hover:bg-red-600 transition">
+          <Link
+            to="/account/checkout"
+            className="w-fit inline-block px-4 py-4 bg-red-500 text-white  rounded-md text-sm hover:bg-red-600 transition"
+          >
             Procees to checkout
-          </button>
+          </Link>
         </div>
       </div>
     </Container>

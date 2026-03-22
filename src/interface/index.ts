@@ -20,16 +20,15 @@ export interface IProduct {
   description: string;
   price: number;
   image: string;
-
-  // 🔥 بدل categoryId
   category: Category;
-
-  // 🔥 اختياري (حسب الباك عندك)
   createdBy?: User;
-
   stock?: number;
   rating?: number;
   numReviews?: number;
-
   createdAt: string;
 }
+
+// 🔥 الكارت منفصل
+export type CartItem = IProduct & {
+  quantity: number;
+};

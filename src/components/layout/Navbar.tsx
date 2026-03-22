@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { IoMdLogOut } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../ui/Container";
+import type { RootState } from "../../App/store";
+import { useSelector } from "react-redux";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -68,7 +70,9 @@ export default function Navbar() {
       window.removeEventListener("wishlistUpdated", updateWishlist);
     };
   }, []);
+  const cart = useSelector((state: RootState) => state.cart.items);
 
+  const cartCount = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
   return (
     <header className="w-full sticky top-0 z-20">
       {/* Top Bar */}
@@ -133,7 +137,14 @@ export default function Navbar() {
             </Link>
 
             {/* Cart */}
-            <ShoppingCartIcon className="w-6 h-6 cursor-pointer" />
+            <Link className="relative" to="/account/cart">
+              <ShoppingCartIcon className="w-6 h-6 cursor-pointer" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
 
             {/* User */}
             {token && (
@@ -150,7 +161,8 @@ export default function Navbar() {
                       <button
                         key={item.name}
                         onClick={() => navigate(item.href)}
-                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition">
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition"
+                      >
                         <item.icon className="w-5 h-5" />
                         {item.name}
                       </button>
@@ -162,7 +174,8 @@ export default function Navbar() {
                         localStorage.removeItem("user");
                         navigate("/auth/login");
                       }}
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-500/30 transition">
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-500/30 transition"
+                    >
                       <IoMdLogOut className="w-5 h-5" />
                       Logout
                     </button>
@@ -178,7 +191,8 @@ export default function Navbar() {
       <div
         className={`fixed top-0 z-50 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${
           open ? "translate-x-0" : "-translate-x-full"
-        }`}>
+        }`}
+      >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-bold">Menu</h2>
 

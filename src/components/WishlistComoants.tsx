@@ -1,12 +1,16 @@
-const urelImg = "http://localhost:5000/uploads/";
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { getWishlist, removeFromWishlist } from "../utils/wishlist";
+import { IMG_URL } from "../utils/axios";
+import { addItem } from "../App/slices/cartSlice";
+import { useDispatch } from "react-redux";
+import type { IProduct } from "../interface";
 
 const WishlistComoants = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   // Wishlist Count
   const [wishlistCount, setWishlistCount] = useState(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setProducts(getWishlist());
@@ -21,6 +25,11 @@ const WishlistComoants = () => {
     removeFromWishlist(id);
     setProducts(getWishlist());
   };
+
+  const handleAddToCart = (product: IProduct) => {
+    dispatch(addItem(product));
+  };
+
   return (
     <>
       <div className="flex items-center justify-between mt-10 mb-6">
@@ -37,18 +46,22 @@ const WishlistComoants = () => {
           <div key={product._id} className="relative text-center">
             <button
               onClick={() => removeItem(product._id)}
-              className="absolute top-2 right-2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-red-500 hover:text-white transition">
+              className="absolute top-2 right-2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-red-500 hover:text-white transition"
+            >
               <FaTrash />
             </button>
 
             <div className="relative bg-gray-200 rounded-2xl overflow-hidden mb-6 flex items-center justify-center">
               <img
                 className="w-full h-[300px] object-cover"
-                src={`${urelImg}${product.image}`}
+                src={`${IMG_URL}${product.image}`}
                 alt={product.name}
               />
 
-              <button className="absolute bottom-0 w-full bg-black text-white py-3">
+              <button
+                onClick={() => handleAddToCart(product)}
+                className="absolute bottom-0 w-full bg-black text-white py-3"
+              >
                 Add To Cart
               </button>
             </div>

@@ -1,9 +1,13 @@
 import { FaEye, FaShoppingCart, FaStar, FaRegHeart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IMG_URL } from "../../utils/axios";
 import type { IProduct } from "../../interface";
+import { useDispatch } from "react-redux";
+import { isInWishlist, toggleWishlist } from "../../utils/wishlist";
+import { useState } from "react";
+import { addItem } from "../../App/slices/cartSlice";
 
-const DAYS_NEW = 14; // consider product new if created within this many days
+const DAYS_NEW = 14;
 
 const formatPrice = (value?: number) => {
   if (value == null) return "-";
@@ -18,94 +22,134 @@ const isNewProduct = (createdAt?: string | Date) => {
 };
 
 const ProductCard = ({ product }: { product: IProduct }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [liked, setLiked] = useState(isInWishlist(product._id));
+
   const rating = Math.round(product.rating || 0);
   const hasDiscount = product.price > 1000;
   const discountPercent = hasDiscount ? 20 : 0;
-  const originalPrice = hasDiscount ? product.price + Math.round(product.price * (discountPercent / 100)) : product.price + 200;
+
+  const originalPrice = hasDiscount
+    ? product.price + Math.round(product.price * 0.2)
+    : product.price + 200;
+
+  // 🔐 Auth Check
+  const requireAuth = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/auth/login");
+      return false;
+    }
+    return true;
+  };
+
+  // 🛒 Add To Cart
+  const handleAddToCart = () => {
+    if (!requireAuth()) return;
+
+    dispatch(addItem(product));
+  };
+
+  const handleWishlist = () => {
+    if (!requireAuth()) return;
+
+    toggleWishlist(product);
+    setLiked(!liked);
+  };
 
   return (
-    <article className="group bg-white rounded-lg overflow-hidden border border-transparent hover:border-gray-200 transition-shadow shadow-sm hover:shadow-md">
-      {/* IMAGE AREA */}
-      <div className="relative bg-gray-50 p-4 flex items-center justify-center h-44">
-        {/* top-right stacked icons */}
-        <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
-          <button
-            aria-label="Wishlist"
-            title="Wishlist"
-            className="bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-sm text-gray-600 hover:text-rose-500"
-          >
-            <FaRegHeart size={14} />
-          </button>
-
-          <Link to={`/products/${product._id}`} aria-label="Quick view" title="Quick view" className="bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-sm text-gray-600 hover:text-gray-900 inline-flex">
-            <FaEye size={14} />
-          </Link>
-        </div>
-
-        {/* Badges (left top) */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {hasDiscount && (
-            <span className="inline-flex items-center text-xs font-semibold px-2 py-1 rounded bg-red-500 text-white">-{discountPercent}%</span>
-          )}
-
-          {isNewProduct(product.createdAt) && (
-            <span className="inline-flex items-center text-xs font-semibold px-2 py-1 rounded bg-green-600 text-white">NEW</span>
-          )}
-        </div>
-
-        {/* Product Image (link) */}
-        <Link to={`/products/${product._id}`} className="flex items-center justify-center w-full h-full">
+    <article className="group relative bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+      
+      <div className="relative bg-gray-50 h-52 flex items-center justify-center overflow-hidden">
+        <Link
+          to={`/products/${product._id}`}
+          className="w-full h-full flex items-center justify-center"
+        >
           <img
             src={`${IMG_URL}${product.image}`}
             alt={product.name}
-            className="max-h-36 object-contain transition-transform duration-300 group-hover:scale-105"
+            className="max-h-40 object-contain transition-transform duration-500 group-hover:scale-110"
           />
         </Link>
 
-        {/* ADD TO CART BAR - hidden until hover */}
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-4 w-11/12 opacity-0 translate-y-3 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0">
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-300" />
+
+        <div className="absolute inset-0 z-50 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300">
           <button
-            className="w-full bg-black text-white py-2 rounded-md flex items-center justify-center gap-2 shadow-md hover:bg-gray-900"
-            aria-label={`Add ${product.name} to cart`}
+            onClick={handleAddToCart}
+            className="w-10 h-10 z-50 rounded-full bg-white flex items-center justify-center shadow hover:bg-black hover:text-white transition"
           >
             <FaShoppingCart size={14} />
-            <span className="text-sm font-medium">Add To Cart</span>
           </button>
+
+          <Link
+            to={`/products/${product._id}`}
+            className="w-10 h-10 z-50 rounded-full bg-white flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+          >
+            <FaEye size={14} />
+          </Link>
+
+          <button
+            onClick={handleWishlist}
+            className="w-10 h-10 z-50 rounded-full bg-white flex items-center justify-center shadow hover:bg-rose-500 hover:text-white transition"
+          >
+            <FaRegHeart size={14} className={liked ? "text-red-500" : ""} />
+          </button>
+
+
+
+        </div>
+
+        <div className="absolute top-3 left-3 flex flex-col gap-2">
+          {hasDiscount && (
+            <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
+              -{discountPercent}%
+            </span>
+          )}
+
+          {isNewProduct(product.createdAt) && (
+            <span className="text-xs bg-green-600 text-white px-2 py-1 rounded">
+              NEW
+            </span>
+          )}
         </div>
       </div>
 
-      {/* INFO */}
-      <div className="px-4 pb-4 pt-3">
-        <Link to={`/products/${product._id}`} className="block">
-          <h3 className="text-sm font-medium text-gray-800 mb-2 h-6 overflow-hidden" title={product.name}>{product.name}</h3>
+      <div className="p-4">
+        <Link to={`/products/${product._id}`}>
+          <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 mb-2 hover:text-black">
+            {product.name}
+          </h3>
         </Link>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="text-sm font-bold text-rose-600">{formatPrice(product.price)}</div>
+        {/* PRICE */}
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-rose-600">
+            {formatPrice(product.price)}
+          </span>
 
-              <div className="text-xs text-gray-400 line-through">{formatPrice(originalPrice)}</div>
-            </div>
+          <span className="text-sm text-gray-400 line-through">
+            {formatPrice(originalPrice)}
+          </span>
+        </div>
 
-            <div className="mt-2 flex items-center gap-2">
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <FaStar
-                    key={i}
-                    size={14}
-                    className={i < rating ? "text-yellow-400" : "text-gray-200"}
-                    aria-hidden
-                  />
-                ))}
-              </div>
-
-              <span className="text-xs text-gray-500">({product.numReviews || 0})</span>
-            </div>
+        {/* RATING */}
+        <div className="flex items-center gap-2 mt-2">
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <FaStar
+                key={i}
+                size={13}
+                className={i < rating ? "text-yellow-400" : "text-gray-200"}
+              />
+            ))}
           </div>
 
-          {/* small placeholder so layout matches screenshot spacing */}
-          <div />
+          <span className="text-xs text-gray-500">
+            ({product.numReviews || 0})
+          </span>
         </div>
       </div>
     </article>

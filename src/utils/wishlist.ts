@@ -1,18 +1,13 @@
-type Product = {
-  _id: string;
-  name?: string;
-  price?: number;
-  image?: string;
-};
+import type { IProduct } from "../interface";
 
 const STORAGE_KEY = "wishlist";
 
-export const getWishlist = (): Product[] => {
+export const getWishlist = (): IProduct[] => {
   const data = localStorage.getItem(STORAGE_KEY);
   return data ? JSON.parse(data) : [];
 };
 
-export const addToWishlist = (product: Product) => {
+export const addToWishlist = (product: IProduct) => {
   const wishlist = getWishlist();
 
   const exists = wishlist.some((p) => p._id === product._id);
@@ -42,7 +37,7 @@ export const removeFromWishlist = (id: string) => {
   return updated;
 };
 
-export const toggleWishlist = (product: Product) => {
+export const toggleWishlist = (product: IProduct) => {
   const wishlist = getWishlist();
 
   const exists = wishlist.some((p) => p._id === product._id);
